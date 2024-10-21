@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诗句</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+    <h3>请输入诗的名称、作者和内容</h3>
+    诗名和作者<input type="text" v-model="name">
+    内容：<input type="text" v-model="contant">
+    <button @click="handleAdd">添加</button>
+    <my-componment v-bind:promArray="poem" :num="poem.length"></my-componment>
+    </div>
+    <poetry-comp poemarr="poemData" :num="poemData.length" @delete="handleDel"></poetry-comp>
+    <template id="child">
+        <div>
+        <h3>诗集中共{{num}}首诗</h3>
+        <ul>
+            <li v-for="(poem,index) in poemarr">{{item.id}}.{{item.name}}--{{item.contant}}</li>
+        </ul>
+        </div>
+    </template>
+    <script>
+        const MyComponent={
+            props:['promArray'],
+            template:'#child'
+        }
+        const RootComponent={
+            data:function(){
+                return{
+                name:'',
+                contant:'',
+                poem:[{
+                    id:1,
+                    name:'登鹳雀楼 王之涣',
+                    contant:'白日依山尽，黄河入海流'
+                },{
+                    id:2,
+                    name:'静夜思 李白',
+                    contant:'床前明月光，疑是地上霜'
+                },{
+                    id:3,
+                    name:'2222',
+                    contant:'66666666666'
+                }]
+            }
+            },
+            components:{
+                 'my-componment':MyComponent
+
+            },
+            methods: {
+                handleAdd:function(){
+                    this.poem.push({
+                        id:this.length+1,
+                        name:this.name
+                    })
+                }
+                
+            },
+        }
+        const appObj=Vue.createApp(RootComponent)
+        appObj.mount("#app")
+    </script>
+</body>
+</html>

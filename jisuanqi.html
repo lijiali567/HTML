@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>简易计算器</title>
+        <!--引入vue库-->
+        <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    </head>
+    <body>
+        <!--挂载节点-->
+        <div id="app">
+            <h1>简易计算器</h1>
+            操作数一：<input type="number" v-model="operand1" placeholder="请输入第一个操作数">
+                运算符：<select v-model="operator">
+                    <option value="+">+</option>
+                    <option value="-">-</option>
+                    <option value="*">*</option>
+                    <option value="/">/</option>
+                    <option value="**">**</option>
+                </select>
+                操作数二：<input type="number" v-model="operand2" placeholder="请输入第二个操作数" v-show="operator !== '^'">
+                <p><button @click="calculate">计算</button></p>
+                <p>结果：{{result}} </p>
+            <!-- 模板内容-->           
+            <!-- {{msg}} -->
+        </div>
+        <script type="text/javascript"> 
+            //创建根组件
+            const RootComponent = {            
+                el: '#app',
+                data: {
+                    operand1: '',
+                    operand2: '',
+                    operator: '+',
+                    result: ''
+                },
+            }
+            //创建Vue应用实例           
+            const vueApp = Vue.createApp(RootComponent)
+            // 挂载vueApp，告诉Vue把数据填充到那个位置，这里通过id选择器进行绑定到那个标签。
+            const vm = vueApp.mount("#app")
+            console.log(Vue.version)
+            new Vue(
+                {
+                    el: '#app',
+                    data: {
+                        operand1: '',
+                        operand2: '',
+                        operator: '+',
+                        result: ''
+            },
+                    methods: {
+                        calculate(){
+                            let num1 = parseFloat(this.operand1);
+                            let num2 = parseFloat(this.operand2);
+                            if (isNaN(num1) || isNaN(num2)) {
+                                alert('请输入有效的数字');
+                                return;
+                            }
+                            switch (this.operator) {
+                                case '+':
+                                    this.result = num1 + num2;
+                                    break;
+                                case '-':
+                                    this.result = num1 - num2;
+                                    break;
+                                case '*':
+                                    this.result = num1 * num2;
+                                    break;
+                                case '/':
+                                    if (num2 === 0) {
+                                        alert('除数不能为0');
+                                        return;
+                                    }
+                                    this.result = num1 / num2;
+                                    break;
+                                case '**':
+                                    this.result = Math.pow(num1, num2);
+                                    break;
+                            }
+                        }
+                    },
+
+                }
+            )
+        </script>   
+    </body> 
+</html>
+

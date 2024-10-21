@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古诗</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h3> 请输入诗的名称、作者和内容</h3>
+        <!-- 使用v-model指令将输入的值与Vue实例的name属性进行双向绑定 -->
+        诗名和作者<input type="text" v-model="name">
+        内容：<input type="text" v-model="content">
+        <button @click="handleAdd">添加</button>
+        <!-- 创建一个名为poem-comp的自定义组件，将poem数组和poem的长度传递给组件，并在删除事件触发时调用Vue实例的handleDel方法 -->
+        <poem-comp :poem-Array="poem" :num="poem.length" @delete="handleDel"></poem-comp>
+    </div>
+    <!-- <poetry-comp poemarr="poemData" :num="poemData.length" @delete="handleDel"></poetry-comp> -->
+    <template id="child">
+        <div>
+            <h3>诗集中共{{num}}首诗</h3>
+            <ul>
+                <!-- 使用v-for指令遍历poemArray数组，为每个元素创建一个列表项，显示诗的序号、名称和内容，点击时触发handleClick方法并传递索引值 -->
+                <li v-for="(item,index) in poemArray" @click="handleClick(index)">{{index+1}}. {{item.name}} -- {{item.content}}</li>
+            </ul>
+        </div>
+    </template>
+
+    <script>
+        // const MyComponent={
+        //     props:['promArray'],
+        //     template:'#child'
+        // }
+
+        const RootComponent={
+            data:function(){
+                return{
+                    poem:[
+                        {
+                            id:1,
+                            name:'登鹳雀楼 王之涣',
+                            content:'白日依山尽，黄河入海流'
+                        },
+                        {
+                            id:2,
+                            name:'静夜思 李白',
+                            content:'床前明月光，疑是地上霜'
+                        },
+                        {
+                            id:3,
+                            name:'观沧海 曹操',
+                            content:'东临碣石，以观沧海'
+                        }
+                    ],
+                    name:'',
+                    content:''
+                }
+            },
+            // components:{
+            //     'my-componment':MyComponent
+            // },
+            methods: {
+                handleAdd:function(){
+                    this.poem.push(
+                        {
+                            id:this.length+1,
+                            name:this.name,
+                            content:this.content
+                        }
+                    )
+                    name=''
+                    content=''
+                },
+                handleDel:function(index){
+                    this.poem.splice(index,1)
+                }   
+            }
+
+        }
+
+        const ChildComp={
+            template:"#child",
+            props:{
+                poemArray:Array,
+                num:Number
+            },
+            emits:['delete'],
+            methods:{
+                handleClick(index){
+                    this.$emit('delete',index)
+                }
+            }
+
+        }
+        const obj=Vue.createApp(RootComponent)
+        obj.component("PoemComp",ChildComp)
+        obj.mount("#app")
+    </script>
+</body>
+</html>

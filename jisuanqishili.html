@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简易计算器</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+
+    
+        <h2>简易计算器</h2>
+        <!-- type="number"输出形式为数字 -->
+        操作数一：<input type="number" v-model="op1">  
+        运算符：<select v-model="selected">
+            <option >+</option>
+            <option >-</option>
+            <option >*</option>
+            <option >/</option>
+            <option >**</option>
+        </select>
+        <span v-show="isSeen">操作数二：<input type="number" v-model="op2"></span>
+        <!-- v-on点击事件,计算 -->
+        <p><button v-on:click="calc">计算</button></p>   
+        <p>结果：{{total}} </p>
+    </div>
+
+    <script>
+        const RootComponent={
+            data:function() {
+                return {
+                    op1:0,
+                    op2:0,
+                    selected:'',
+                    total:0,
+                    isSeen:true
+
+                }
+            },
+            //v-on方法处理,调用total时要用this
+            methods: {
+                calc:function(){
+                    switch(this.selected){
+                        case '+':
+                            this.total=this.op1 + this.op2
+                            break
+                        case '-':
+                            this.total=this.op1 - this.op2
+                            break
+                        case '*':
+                            this.total=this.op1 * this.op2
+                            break
+                        case '/':
+                            this.total=this.op1 / this.op2
+                            break
+                        case '**':
+                            // this.isSeen=false
+                            this.total=this.op1 * this.op1
+                            break
+                    }
+                }
+            },
+            watch:{
+                selected:function(newValue,oldValue){
+                    if(newValue==='**'){
+                        this.isSeen=false
+                    }
+                }
+            }
+            
+        }
+        //创建Vue应用实例           
+        const vueApp = Vue.createApp(RootComponent)
+        // 挂载vueApp，告诉Vue把数据填充到那个位置，这里通过id选择器进行绑定到那个标签。
+        const vm = vueApp.mount("#app")
+         console.log(Vue.version)
+    </script>
+</body>
+</html>
